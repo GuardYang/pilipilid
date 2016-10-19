@@ -3,7 +3,7 @@ import Pili from 'pili';
 import level from 'level';
 
 const db = level('./mydb');
-const credentials = new Pili.Credentials("<AK>", "<SK>");
+const credentials = new Pili.Credentials("exempwg0U6rl1yL_2G4A_00weNY5kEdMeG7oYH04", "8dhh34fcyMD3tDobvwSrsWbhX-GC6GKvykOikmLm");
 const hub = new Pili.Hub(credentials, "wantplus-1");
 
 let pilipilis = [];
@@ -41,12 +41,15 @@ export default ({ config }) => resource({
 
 	/** POST / - Create a new entity */
 	create({ body }, res) {
+    console.log(body);
     let title = body.title | null;
     var options = {
       title          : body.title,    // optional, auto-generated as default
       publishKey     : null,    // optional, auto-generated as default
       publishSecurity : "static" // optional, can be "dynamic" or "static", "dynamic" as default
     };
+
+    //console.log(JSON.stringify(options));
 
     hub.createStream(options, function(err, stream) {
       if (!err) {
@@ -57,9 +60,9 @@ export default ({ config }) => resource({
         streamEntry.title = stream.title;
         pilipilis.push(streamEntry);
         db.put('pilipili',JSON.stringify(pilipilis));
-        res.json(stream);
+        res.json(streamEntry);
       } else {
-        console.log(err + 'error code: ' + err.errorCode + 'http code: ' + err.httpCode);
+        console.log(err + ' error code: ' + err.errorCode + ' http code: ' + err.httpCode);
         res.json({error:err})
       }
     });
